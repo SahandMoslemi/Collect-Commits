@@ -4,10 +4,11 @@ import json
 import time
 from datetime import datetime
 import os
+from settings import FIRST_FILE_INDEX, LAST_FILE_INDEX, TOKEN
 
 if __name__ == "__main__":
-    first_file_index = 0
-    last_file_index = 5
+    first_file_index = FIRST_FILE_INDEX
+    last_file_index = LAST_FILE_INDEX
 
     file_paths = [f'./data/tssb_data_3M/file-{index}.jsonl' for index in range(first_file_index, last_file_index+1)]
 
@@ -24,10 +25,10 @@ if __name__ == "__main__":
     del data_list, file_paths
 
     # Enter your personal token.
-    token = ""
+    token = TOKEN
 
     # The limit of GitHub API requests per hour.
-    github_limit = 10
+    github_limit = 5000
 
     dataset_size = df.shape[0]
     numberof_partitions = dataset_size // github_limit + 1
@@ -81,6 +82,6 @@ if __name__ == "__main__":
 
         print("Last Index Observed: " + str(baundary_index) + " | Time: " + str(datetime.now()))
 
-        time.sleep(3)
+        time.sleep(3600)
 
     del partitions_boundaries, commits, errors
