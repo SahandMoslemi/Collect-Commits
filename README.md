@@ -1,8 +1,10 @@
 ## Instructions
 - Dear all, Please extract [TSSB-Data-3M](https://drive.google.com/file/d/1NRGnKuzia01JCK4G1bDFKWolZOeNtSuU/view?usp=sharing) file to [```./data/```](https://github.com/SahandMoslemi/Collect-Commits/tree/main/data) path.
-- Edit ```settings.py```. There are 3 parameters, take the first two from [Files-to-Process](##Files-to-Process) table. The last one should be your personal github token.
+- Edit ```settings.py```. There are 3 parameters, take the second one and the third one from [Files-to-Process](##Files-to-Process) table. The first one should be your personal github token.
 - Install the ```requirements.txt```.
 - Then you should be able to run ```main.py```.
+
+- After running for a while the program will create files named ```commits_<n>.json ```. If you had to stop the program, next time you run it, just change the value of the ```NEXT_INDEX_TO_OBSERVE``` variable to ```n+1```. It will continue running from where you left.
 
 ## Files-to-Process
 | Member | FFI | LFI |
