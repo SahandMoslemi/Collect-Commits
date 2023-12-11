@@ -28,7 +28,7 @@ if __name__ == "__main__":
     token = TOKEN
 
     # The limit of GitHub API requests per hour.
-    github_limit = 5000
+    github_limit = 10
 
     dataset_size = df.shape[0]
     numberof_partitions = dataset_size // github_limit + 1
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     partitions_boundaries += [partitions_boundaries[-1] + dataset_size % github_limit]
 
     #Make it with os
-    extracted_data_path = os.path.join("data", "commit_messages")
+    extracted_data_path = os.path.join("data", "commits")
 
     for baundary_index in range(numberof_partitions):
         commits = []
@@ -61,6 +61,9 @@ if __name__ == "__main__":
                     "reponame": reponame,
                     "commit_sha": commit_sha,
                     "message": commit_details["commit"]["message"],
+                    "diff": df["diff"][data_index],
+                    "sstub_pattern": df["sstub_pattern"][data_index],
+                    "likely_bug": str(df["likely_bug"][data_index])
                 })
 
             else:
@@ -74,7 +77,7 @@ if __name__ == "__main__":
                     "response_text": commit_response.text
                 })
         
-        with open(os.path.join(extracted_data_path, ("commit_messages_" + str(baundary_index) + ".json")), "w") as file:
+        with open(os.path.join(extracted_data_path, ("commits_" + str(baundary_index) + ".json")), "w") as file:
             json.dump(commits, file)
         
         with open(os.path.join(extracted_data_path, ("errors_" + str(baundary_index) + ".json")), "w") as file:
@@ -82,6 +85,6 @@ if __name__ == "__main__":
 
         print("Last Index Observed: " + str(baundary_index) + " | Time: " + str(datetime.now()))
 
-        time.sleep(3600)
+        time.sleep(3)
 
     del partitions_boundaries, commits, errors
