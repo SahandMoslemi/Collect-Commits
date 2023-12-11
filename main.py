@@ -4,7 +4,7 @@ import json
 import time
 from datetime import datetime
 import os
-from settings import FIRST_FILE_INDEX, LAST_FILE_INDEX, TOKEN
+from settings import TOKEN, FIRST_FILE_INDEX, LAST_FILE_INDEX, NEXT_INDEX_TO_OBSERVE
 
 if __name__ == "__main__":
     first_file_index = FIRST_FILE_INDEX
@@ -24,11 +24,13 @@ if __name__ == "__main__":
 
     del data_list, file_paths
 
+    print("Data loaded successfully.")
+
     # Enter your personal token.
     token = TOKEN
 
     # The limit of GitHub API requests per hour.
-    github_limit = 5000
+    github_limit = 1000
 
     dataset_size = df.shape[0]
     numberof_partitions = dataset_size // github_limit + 1
@@ -38,7 +40,7 @@ if __name__ == "__main__":
     #Make it with os
     extracted_data_path = os.path.join("data", "commits")
 
-    for baundary_index in range(numberof_partitions):
+    for baundary_index in range(NEXT_INDEX_TO_OBSERVE, numberof_partitions):
         commits = []
         errors = []
         
@@ -57,9 +59,9 @@ if __name__ == "__main__":
             while "API rate limit exceeded" in commit_response.text:
                 commit_response = requests.get(commit_url, headers=headers)
 
-                print("Hourly limit exceeded. Next attempt in one minute.")
+                print("Hourly limit exceeded. Next attempt in five minute.")
 
-                time.sleep(60)
+                time.sleep(300)
 
             if commit_response.status_code == 200:
                 commit_details = commit_response.json()
@@ -67,10 +69,11 @@ if __name__ == "__main__":
                     "username": username,
                     "reponame": reponame,
                     "commit_sha": commit_sha,
+                    "likely_bug": bool(df["likely_bug"][data_index]),
+                    "before": df["before"][data_index],
+                    "after": df["after"][data_index],
                     "message": commit_details["commit"]["message"],
-                    "diff": df["diff"][data_index],
-                    "sstub_pattern": df["sstub_pattern"][data_index],
-                    "likely_bug": bool(df["likely_bug"][data_index])
+                    "sstub_pattern": df["sstub_pattern"][data_index]
                 })
 
             else:
