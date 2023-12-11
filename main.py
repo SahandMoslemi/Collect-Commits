@@ -10,7 +10,7 @@ if __name__ == "__main__":
     first_file_index = FIRST_FILE_INDEX
     last_file_index = LAST_FILE_INDEX
 
-    file_paths = [os.join("data", "tssb_data_3M", f"file-{index}.jsonl") for index in range(first_file_index, last_file_index+1)]
+    file_paths = [os.path.join("data", "tssb_data_3M", f"file-{index}.jsonl") for index in range(first_file_index, last_file_index+1)]
 
     data_list = []
 
