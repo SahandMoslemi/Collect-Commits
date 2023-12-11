@@ -70,7 +70,7 @@ if __name__ == "__main__":
                     "message": commit_details["commit"]["message"],
                     "diff": df["diff"][data_index],
                     "sstub_pattern": df["sstub_pattern"][data_index],
-                    "likely_bug": str(df["likely_bug"][data_index])
+                    "likely_bug": bool(df["likely_bug"][data_index])
                 })
 
             else:
