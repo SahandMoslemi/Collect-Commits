@@ -28,7 +28,7 @@ if __name__ == "__main__":
     token = TOKEN
 
     # The limit of GitHub API requests per hour.
-    github_limit = 10
+    github_limit = 5000
 
     dataset_size = df.shape[0]
     numberof_partitions = dataset_size // github_limit + 1
@@ -85,6 +85,6 @@ if __name__ == "__main__":
 
         print("Last Index Observed: " + str(baundary_index) + " | Time: " + str(datetime.now()))
 
-        time.sleep(3)
+        time.sleep(3600)
 
     del partitions_boundaries, commits, errors
