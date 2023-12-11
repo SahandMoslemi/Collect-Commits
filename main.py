@@ -54,6 +54,13 @@ if __name__ == "__main__":
             commit_url = f"https://api.github.com/repos/{username}/{reponame}/commits/{commit_sha}"
             commit_response = requests.get(commit_url, headers=headers)
 
+            while "API rate limit exceeded" in commit_response.text:
+                commit_response = requests.get(commit_url, headers=headers)
+
+                print("Hourly limit exceeded. Next attempt in one minute.")
+
+                time.sleep(60)
+
             if commit_response.status_code == 200:
                 commit_details = commit_response.json()
                 commits.append({
@@ -84,7 +91,5 @@ if __name__ == "__main__":
             json.dump(errors, file)
 
         print("Last Index Observed: " + str(baundary_index) + " | Time: " + str(datetime.now()))
-
-        time.sleep(3600)
 
     del partitions_boundaries, commits, errors
